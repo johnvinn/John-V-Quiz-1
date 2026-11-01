@@ -1,0 +1,690 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Well Do You Know Me?</title>
+
+<style>
+:root {
+  --blue: #3987ff;
+  --yellow: #f5d547;
+  --purple: #9457eb;
+  --text: #f8f9ff;
+  --muted: #aeb5c8;
+  --panel: rgba(19, 22, 39, .86);
+  --border: rgba(255,255,255,.12);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 15% 15%, rgba(57,135,255,.25), transparent 35%),
+    radial-gradient(circle at 85% 20%, rgba(245,213,71,.16), transparent 35%),
+    radial-gradient(circle at 50% 95%, rgba(148,87,235,.23), transparent 40%),
+    #0b0d18;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 35px 16px 80px;
+}
+
+button { font: inherit; }
+
+.app {
+  width: 100%;
+  max-width: 680px;
+  padding: 30px;
+  border: 1px solid var(--border);
+  border-radius: 25px;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 25px 80px rgba(0,0,0,.4);
+}
+
+.header { text-align: center; }
+
+.logo {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 15px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  font-size: 30px;
+  background: linear-gradient(135deg,var(--blue),var(--purple),var(--yellow));
+  box-shadow: 0 8px 30px rgba(100,100,255,.25);
+}
+
+h1 {
+  font-size: clamp(27px,5vw,39px);
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.gradient-text {
+  background: linear-gradient(100deg,var(--blue),var(--yellow),var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin: 10px 0 25px;
+  line-height: 1.5;
+}
+
+.screen { display: none; }
+.screen.active { display: block; animation: appear .35s ease; }
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.primary-btn, .secondary-btn {
+  border: 0;
+  border-radius: 13px;
+  padding: 14px 22px;
+  cursor: pointer;
+  font-weight: 750;
+  transition: .2s;
+}
+
+.primary-btn {
+  color: #101322;
+  background: linear-gradient(100deg,var(--blue),var(--yellow),var(--purple));
+}
+
+.secondary-btn {
+  color: var(--text);
+  background: rgba(255,255,255,.08);
+  border: 1px solid var(--border);
+}
+
+.primary-btn:hover, .secondary-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.full { width: 100%; }
+
+.progress-area {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.progress-track {
+  height: 8px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255,255,255,.1);
+  margin-bottom: 25px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg,var(--blue),var(--yellow),var(--purple));
+  transition: width .35s;
+}
+
+.question-number {
+  color: var(--yellow);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.question {
+  font-size: clamp(21px,4vw,27px);
+  line-height: 1.35;
+  margin: 10px 0 22px;
+}
+
+.answers {
+  display: grid;
+  gap: 12px;
+}
+
+.answer {
+  width: 100%;
+  text-align: left;
+  color: var(--text);
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: rgba(255,255,255,.045);
+  cursor: pointer;
+  transition: .2s;
+}
+
+.answer:hover:not(:disabled) {
+  border-color: var(--blue);
+  background: rgba(57,135,255,.12);
+  transform: translateX(3px);
+}
+
+.answer:disabled { cursor: default; opacity: 1; }
+
+.answer.correct {
+  border-color: #35d69b;
+  background: rgba(53,214,155,.13);
+}
+
+.answer.wrong {
+  border-color: #ff687c;
+  background: rgba(255,104,124,.12);
+}
+
+.feedback {
+  display: none;
+  margin-top: 17px;
+  padding: 14px;
+  border-radius: 12px;
+  line-height: 1.5;
+  background: rgba(255,255,255,.07);
+}
+
+.feedback.show { display: block; }
+
+.quiz-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.result-score {
+  font-size: 65px;
+  font-weight: 850;
+  margin: 15px 0 5px;
+  background: linear-gradient(100deg,var(--blue),var(--yellow),var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.result-message {
+  color: var(--muted);
+  margin-bottom: 25px;
+}
+
+.review-list {
+  display: grid;
+  gap: 10px;
+  margin: 25px 0;
+  text-align: left;
+}
+
+.review-item {
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.04);
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.review-item strong { display: block; margin-bottom: 5px; }
+.review-correct { color: #55e2ad; }
+.review-wrong { color: #ff8795; }
+
+.editor {
+  border-top: 1px solid var(--border);
+  margin-top: 30px;
+  padding-top: 20px;
+}
+
+.editor summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.editor-content { margin-top: 18px; }
+
+.editor-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.editor-row label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.editor-row input {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: rgba(255,255,255,.07);
+  color: white;
+  outline: none;
+}
+
+.editor-row input:focus { border-color: var(--blue); }
+
+.editor-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.watermark {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 10px 17px;
+  border-radius: 30px;
+  background: rgba(12,15,29,.82);
+  border: 1px solid rgba(255,255,255,.14);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 5px 25px rgba(0,0,0,.3);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.watermark span {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: .5px;
+  background: linear-gradient(
+    100deg,
+    #58a2ff 0%,
+    #f9df69 48%,
+    #bd8aff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(0 0 3px rgba(75,145,255,.8))
+    drop-shadow(0 0 7px rgba(245,213,71,.45))
+    drop-shadow(0 0 10px rgba(148,87,235,.5));
+}
+
+@media(max-width:520px) {
+  body { padding: 15px 12px 75px; }
+  .app { padding: 22px 17px; border-radius: 20px; }
+  .watermark { bottom: 10px; }
+  .watermark span { font-size: 10px; }
+  .answer { padding: 14px; }
+}
+</style>
+</head>
+
+<body>
+<main class="app">
+
+  <header class="header">
+    <div class="logo">✦</div>
+    <h1>How Well Do You <span class="gradient-text">Know Me?</span></h1>
+    <p class="subtitle">Think you know me well? Take this quiz and find out!</p>
+  </header>
+
+  <section id="startScreen" class="screen active">
+    <h2>Ready to test your knowledge?</h2>
+    <p class="subtitle">
+      Answer all 5 questions and see how well you really know me.
+      Your choices will be shuffled every time you start.
+    </p>
+    <button class="primary-btn full" onclick="startQuiz()">Start Quiz →</button>
+  </section>
+
+  <section id="quizScreen" class="screen">
+    <div class="progress-area">
+      <span id="questionCounter">Question 1 of 5</span>
+      <span id="scoreCounter">Score: 0</span>
+    </div>
+
+    <div class="progress-track">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+
+    <div id="questionNumber" class="question-number">QUESTION 01</div>
+    <h2 id="questionText" class="question"></h2>
+    <div id="answerList" class="answers"></div>
+    <div id="feedback" class="feedback"></div>
+
+    <div class="quiz-controls">
+      <button id="nextButton" class="primary-btn" onclick="nextQuestion()" disabled>
+        Next Question →
+      </button>
+    </div>
+  </section>
+
+  <section id="resultScreen" class="screen">
+    <div class="question-number">QUIZ COMPLETED</div>
+    <h2>Your Result</h2>
+    <div id="finalScore" class="result-score">0/5</div>
+    <p id="resultMessage" class="result-message"></p>
+
+    <div id="reviewList" class="review-list"></div>
+
+    <button class="primary-btn full" onclick="copyResult()">Copy My Result</button>
+    <button class="secondary-btn full" style="margin-top:10px" onclick="startQuiz()">
+      Play Again ↻
+    </button>
+  </section>
+
+  <details class="editor">
+    <summary>⚙ Customize Quiz Questions</summary>
+    <div class="editor-content">
+      <p class="editor-note">
+        You can edit the questions and answers below. The first answer is always
+        treated as the correct answer. Changes apply to your next quiz.
+      </p>
+      <div id="editorFields"></div>
+      <button class="secondary-btn full" onclick="resetQuestions()" style="margin-top:15px">
+        Reset Default Questions
+      </button>
+    </div>
+  </details>
+
+</main>
+
+<div class="watermark">
+  <span>Web built by John V Daligdig</span>
+</div>
+
+<script>
+const defaultQuestions = [
+  {
+    question: "What are my favorite colors?",
+    answers: ["Blue, Yellow, and Purple", "Red, Black, and White", "Green, Orange, and Pink", "Black, Gray, and Blue"],
+    correct: 0
+  },
+  {
+    question: "What is my biggest life goal?",
+    answers: [
+      "Improve technology and lead a company",
+      "Become a professional athlete",
+      "Become a famous actor",
+      "Travel around the world"
+    ],
+    correct: 0
+  },
+  {
+    question: "What do I most likely do at home?",
+    answers: [
+      "Do computer stuff",
+      "Play outdoor sports",
+      "Cook different meals",
+      "Read books all day"
+    ],
+    correct: 0
+  },
+  {
+    question: "What do I mostly do on my computer?",
+    answers: [
+      "Create digital projects",
+      "Only watch movies",
+      "Browse social media",
+      "Write school essays"
+    ],
+    correct: 0
+  },
+  {
+    question: "What is my zodiac sign?",
+    answers: ["Scorpio ♏", "Leo ♌", "Gemini ♊", "Aquarius ♒"],
+    correct: 0
+  }
+];
+
+let questions = JSON.parse(JSON.stringify(defaultQuestions));
+let currentQuestion = 0;
+let score = 0;
+let selectedAnswers = [];
+let shuffledQuestions = [];
+let answered = false;
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function shuffle(array) {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function startQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  selectedAnswers = [];
+  answered = false;
+
+  shuffledQuestions = questions.map(q => {
+    const options = q.answers.map((answer, index) => ({
+      text: answer,
+      correct: index === q.correct
+    }));
+    return {
+      question: q.question,
+      options: shuffle(options)
+    };
+  });
+
+  showScreen("quizScreen");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = shuffledQuestions[currentQuestion];
+
+  document.getElementById("questionCounter").textContent =
+    `Question ${currentQuestion + 1} of ${shuffledQuestions.length}`;
+
+  document.getElementById("scoreCounter").textContent = `Score: ${score}`;
+  document.getElementById("questionNumber").textContent =
+    `QUESTION ${String(currentQuestion + 1).padStart(2, "0")}`;
+
+  document.getElementById("questionText").textContent = q.question;
+  document.getElementById("progressFill").style.width =
+    `${(currentQuestion / shuffledQuestions.length) * 100}%`;
+
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").textContent = "";
+
+  const list = document.getElementById("answerList");
+  list.innerHTML = "";
+
+  q.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.className = "answer";
+    button.textContent = `${String.fromCharCode(65 + index)}. ${option.text}`;
+    button.onclick = () => selectAnswer(index);
+    list.appendChild(button);
+  });
+
+  const next = document.getElementById("nextButton");
+  next.disabled = true;
+  next.textContent =
+    currentQuestion === shuffledQuestions.length - 1 ? "See Results →" : "Next Question →";
+}
+
+function selectAnswer(index) {
+  if (answered) return;
+  answered = true;
+
+  const q = shuffledQuestions[currentQuestion];
+  const chosen = q.options[index];
+  const buttons = document.querySelectorAll(".answer");
+
+  selectedAnswers[currentQuestion] = chosen;
+
+  buttons.forEach((button, i) => {
+    button.disabled = true;
+    if (q.options[i].correct) button.classList.add("correct");
+    if (i === index && !chosen.correct) button.classList.add("wrong");
+  });
+
+  const feedback = document.getElementById("feedback");
+
+  if (chosen.correct) {
+    score++;
+    feedback.textContent = "✓ Correct! You know me well!";
+    feedback.style.color = "#55e2ad";
+  } else {
+    const correct = q.options.find(o => o.correct);
+    feedback.textContent = `✕ Not quite! The correct answer is: ${correct.text}`;
+    feedback.style.color = "#ff8795";
+  }
+
+  feedback.classList.add("show");
+  document.getElementById("scoreCounter").textContent = `Score: ${score}`;
+  document.getElementById("nextButton").disabled = false;
+}
+
+function nextQuestion() {
+  if (!answered) return;
+
+  currentQuestion++;
+
+  if (currentQuestion < shuffledQuestions.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  showScreen("resultScreen");
+
+  document.getElementById("progressFill").style.width = "100%";
+  document.getElementById("finalScore").textContent =
+    `${score}/${shuffledQuestions.length}`;
+
+  const percentage = score / shuffledQuestions.length;
+
+  let message = "";
+  if (percentage === 1) message = "Perfect score! You know me incredibly well! 🏆";
+  else if (percentage >= .8) message = "Amazing! You know almost everything about me! 🌟";
+  else if (percentage >= .6) message = "Great job! You know me pretty well! 😎";
+  else if (percentage >= .4) message = "Not bad! But there's still more to learn about me! 🙂";
+  else message = "Looks like you need to get to know me better! 😅";
+
+  document.getElementById("resultMessage").textContent = message;
+
+  const review = document.getElementById("reviewList");
+  review.innerHTML = "";
+
+  shuffledQuestions.forEach((q, i) => {
+    const correct = q.options.find(o => o.correct);
+    const chosen = selectedAnswers[i];
+
+    const item = document.createElement("div");
+    item.className = "review-item";
+
+    const title = document.createElement("strong");
+    title.textContent = `${i + 1}. ${q.question}`;
+
+    const answer = document.createElement("div");
+    answer.textContent = `Correct answer: ${correct.text}`;
+    answer.className = "review-correct";
+
+    const result = document.createElement("div");
+    result.textContent = chosen && chosen.correct
+      ? "Your answer: Correct"
+      : `Your answer: ${chosen ? chosen.text : "Not answered"}`;
+    result.className = chosen && chosen.correct ? "review-correct" : "review-wrong";
+
+    item.append(title, answer, result);
+    review.appendChild(item);
+  });
+}
+
+function copyResult() {
+  const percentage = Math.round(score / shuffledQuestions.length * 100);
+  const text = `How Well Do You Know Me?\nMy score: ${score}/${shuffledQuestions.length} (${percentage}%)\n${document.getElementById("resultMessage").textContent}\n\nWeb built by John V Daligdig`;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(() => alert("Result copied!"))
+      .catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const area = document.createElement("textarea");
+  area.value = text;
+  document.body.appendChild(area);
+  area.select();
+  document.execCommand("copy");
+  area.remove();
+  alert("Result copied!");
+}
+
+function buildEditor() {
+  const container = document.getElementById("editorFields");
+  container.innerHTML = "";
+
+  questions.forEach((q, i) => {
+    const section = document.createElement("div");
+    section.className = "editor-row";
+
+    const questionLabel = document.createElement("label");
+    questionLabel.textContent = `Question ${i + 1}`;
+    const questionInput = document.createElement("input");
+    questionInput.value = q.question;
+    questionInput.onchange = () => {
+      questions[i].question = questionInput.value;
+    };
+
+    section.append(questionLabel, questionInput);
+
+    q.answers.forEach((answer, j) => {
+      const label = document.createElement("label");
+      label.textContent = `Answer ${j + 1}${j === q.correct ? " (Correct)" : ""}`;
+
+      const input = document.createElement("input");
+      input.value = answer;
+      input.style.marginBottom = "10px";
+      input.onchange = () => {
+        questions[i].answers[j] = input.value;
+      };
+
+      section.append(label, input);
+    });
+
+    container.appendChild(section);
+  });
+}
+
+function resetQuestions() {
+  questions = JSON.parse(JSON.stringify(defaultQuestions));
+  buildEditor();
+  alert("Default questions restored!");
+}
+
+buildEditor();
+</script>
+</body>
+</html>
