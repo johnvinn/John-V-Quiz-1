@@ -4,7 +4,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111426">
 <title>How Well Do You Know Me?</title>
+
+<!-- Website Icon -->
+<link rel="icon" type="image/png" href="image(1).png">
+<link rel="apple-touch-icon" href="image(1).png">
 
 <style>
 :root {
@@ -13,11 +18,13 @@
   --purple: #9457eb;
   --text: #f8f9ff;
   --muted: #aeb5c8;
-  --panel: rgba(19, 22, 39, .86);
+  --panel: rgba(19,22,39,.86);
   --border: rgba(255,255,255,.12);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -25,17 +32,27 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at 15% 15%, rgba(57,135,255,.25), transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(245,213,71,.16), transparent 35%),
-    radial-gradient(circle at 50% 95%, rgba(148,87,235,.23), transparent 40%),
+    radial-gradient(circle at 15% 15%,rgba(57,135,255,.27),transparent 35%),
+    radial-gradient(circle at 85% 20%,rgba(245,213,71,.18),transparent 35%),
+    radial-gradient(circle at 50% 95%,rgba(148,87,235,.25),transparent 40%),
     #0b0d18;
+  background-size: 150% 150%;
+  animation: backgroundFlow 14s ease-in-out infinite alternate;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 35px 16px 80px;
+  padding: 35px 16px 85px;
 }
 
-button { font: inherit; }
+@keyframes backgroundFlow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 100%; }
+}
+
+button {
+  font: inherit;
+}
 
 .app {
   width: 100%;
@@ -46,20 +63,27 @@ button { font: inherit; }
   background: var(--panel);
   backdrop-filter: blur(18px);
   box-shadow: 0 25px 80px rgba(0,0,0,.4);
+  animation: panelGlow 7s ease-in-out infinite alternate;
 }
 
-.header { text-align: center; }
+@keyframes panelGlow {
+  from { box-shadow: 0 20px 60px rgba(57,135,255,.12); }
+  to { box-shadow: 0 25px 75px rgba(148,87,235,.2); }
+}
+
+.header {
+  text-align: center;
+}
 
 .logo {
-  width: 65px;
-  height: 65px;
-  margin: 0 auto 15px;
-  display: grid;
-  place-items: center;
-  border-radius: 20px;
-  font-size: 30px;
-  background: linear-gradient(135deg,var(--blue),var(--purple),var(--yellow));
-  box-shadow: 0 8px 30px rgba(100,100,255,.25);
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 17px;
+  display: block;
+  object-fit: contain;
+  aspect-ratio: 1;
+  border-radius: 0;
+  filter: drop-shadow(0 8px 20px rgba(115,100,255,.3));
 }
 
 h1 {
@@ -69,10 +93,24 @@ h1 {
 }
 
 .gradient-text {
-  background: linear-gradient(100deg,var(--blue),var(--yellow),var(--purple));
+  background: linear-gradient(
+    100deg,
+    #3987ff,
+    #f5d547,
+    #9457eb,
+    #3987ff
+  );
+  background-size: 300% 300%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .subtitle {
@@ -81,26 +119,42 @@ h1 {
   line-height: 1.5;
 }
 
-.screen { display: none; }
-.screen.active { display: block; animation: appear .35s ease; }
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+  animation: appear .35s ease;
+}
 
 @keyframes appear {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.primary-btn, .secondary-btn {
+.primary-btn,
+.secondary-btn {
   border: 0;
   border-radius: 13px;
   padding: 14px 22px;
   cursor: pointer;
   font-weight: 750;
-  transition: .2s;
+  transition: transform .2s, filter .2s;
 }
 
 .primary-btn {
   color: #101322;
-  background: linear-gradient(100deg,var(--blue),var(--yellow),var(--purple));
+  background: linear-gradient(
+    110deg,
+    #3987ff,
+    #f5d547,
+    #9457eb,
+    #3987ff
+  );
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+  box-shadow: 0 5px 20px rgba(100,100,255,.16);
 }
 
 .secondary-btn {
@@ -109,12 +163,21 @@ h1 {
   border: 1px solid var(--border);
 }
 
-.primary-btn:hover, .secondary-btn:hover {
+.primary-btn:hover,
+.secondary-btn:hover {
   transform: translateY(-2px);
-  filter: brightness(1.1);
+  filter: brightness(1.12);
 }
 
-.full { width: 100%; }
+.primary-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.full {
+  width: 100%;
+}
 
 .progress-area {
   display: flex;
@@ -137,8 +200,21 @@ h1 {
   height: 100%;
   width: 0%;
   border-radius: inherit;
-  background: linear-gradient(90deg,var(--blue),var(--yellow),var(--purple));
+  background: linear-gradient(
+    90deg,
+    #3987ff,
+    #f5d547,
+    #9457eb,
+    #3987ff
+  );
+  background-size: 300% 100%;
+  animation: progressFlow 4s linear infinite;
   transition: width .35s;
+}
+
+@keyframes progressFlow {
+  from { background-position: 0% 50%; }
+  to { background-position: 300% 50%; }
 }
 
 .question-number {
@@ -146,7 +222,6 @@ h1 {
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 1px;
-  text-transform: uppercase;
 }
 
 .question {
@@ -178,7 +253,10 @@ h1 {
   transform: translateX(3px);
 }
 
-.answer:disabled { cursor: default; opacity: 1; }
+.answer:disabled {
+  cursor: default;
+  opacity: 1;
+}
 
 .answer.correct {
   border-color: #35d69b;
@@ -199,7 +277,9 @@ h1 {
   background: rgba(255,255,255,.07);
 }
 
-.feedback.show { display: block; }
+.feedback.show {
+  display: block;
+}
 
 .quiz-controls {
   display: flex;
@@ -211,10 +291,12 @@ h1 {
   font-size: 65px;
   font-weight: 850;
   margin: 15px 0 5px;
-  background: linear-gradient(100deg,var(--blue),var(--yellow),var(--purple));
+  background: linear-gradient(100deg,#3987ff,#f5d547,#9457eb);
+  background-size: 300% 300%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: gradientMove 5s ease infinite;
 }
 
 .result-message {
@@ -238,9 +320,18 @@ h1 {
   line-height: 1.5;
 }
 
-.review-item strong { display: block; margin-bottom: 5px; }
-.review-correct { color: #55e2ad; }
-.review-wrong { color: #ff8795; }
+.review-item strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.review-correct {
+  color: #55e2ad;
+}
+
+.review-wrong {
+  color: #ff8795;
+}
 
 .editor {
   border-top: 1px solid var(--border);
@@ -254,7 +345,9 @@ h1 {
   font-weight: 700;
 }
 
-.editor-content { margin-top: 18px; }
+.editor-content {
+  margin-top: 18px;
+}
 
 .editor-row {
   padding: 13px 0;
@@ -278,7 +371,9 @@ h1 {
   outline: none;
 }
 
-.editor-row input:focus { border-color: var(--blue); }
+.editor-row input:focus {
+  border-color: var(--blue);
+}
 
 .editor-note {
   font-size: 12px;
@@ -286,6 +381,7 @@ h1 {
   line-height: 1.5;
 }
 
+/* WATERMARK */
 .watermark {
   position: fixed;
   bottom: 15px;
@@ -300,23 +396,26 @@ h1 {
   box-shadow: 0 5px 25px rgba(0,0,0,.3);
   white-space: nowrap;
   pointer-events: none;
+  color: #e9ebf5;
+  font-size: 12px;
+  font-weight: 750;
 }
 
-.watermark span {
+.watermark .author {
   display: inline-block;
-  font-size: 12px;
-  font-weight: 850;
-  letter-spacing: .5px;
   background: linear-gradient(
     100deg,
-    #58a2ff 0%,
-    #f9df69 48%,
-    #bd8aff 100%
+    #58a2ff,
+    #f9df69,
+    #bd8aff,
+    #58a2ff
   );
+  background-size: 300% 300%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
+  animation: gradientMove 4s ease infinite;
   filter:
     drop-shadow(0 0 3px rgba(75,145,255,.8))
     drop-shadow(0 0 7px rgba(245,213,71,.45))
@@ -324,94 +423,160 @@ h1 {
 }
 
 @media(max-width:520px) {
-  body { padding: 15px 12px 75px; }
-  .app { padding: 22px 17px; border-radius: 20px; }
-  .watermark { bottom: 10px; }
-  .watermark span { font-size: 10px; }
-  .answer { padding: 14px; }
+  body {
+    padding: 15px 12px 75px;
+  }
+
+  .app {
+    padding: 22px 17px;
+    border-radius: 20px;
+  }
+
+  .watermark {
+    bottom: 10px;
+    font-size: 10px;
+    padding: 9px 13px;
+  }
+
+  .answer {
+    padding: 14px;
+  }
+}
+
+/* Accessibility: reduce movement when requested */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <main class="app">
 
-  <header class="header">
-    <div class="logo">✦</div>
-    <h1>How Well Do You <span class="gradient-text">Know Me?</span></h1>
-    <p class="subtitle">Think you know me well? Take this quiz and find out!</p>
-  </header>
+<header class="header">
+  <img class="logo" src="image(1).png" alt="Website Icon">
 
-  <section id="startScreen" class="screen active">
-    <h2>Ready to test your knowledge?</h2>
-    <p class="subtitle">
-      Answer all 5 questions and see how well you really know me.
-      Your choices will be shuffled every time you start.
-    </p>
-    <button class="primary-btn full" onclick="startQuiz()">Start Quiz →</button>
-  </section>
+  <h1>
+    How Well Do You
+    <span class="gradient-text">Know Me?</span>
+  </h1>
 
-  <section id="quizScreen" class="screen">
-    <div class="progress-area">
-      <span id="questionCounter">Question 1 of 5</span>
-      <span id="scoreCounter">Score: 0</span>
-    </div>
+  <p class="subtitle">
+    Think you know me well? Take this quiz and find out!
+  </p>
+</header>
 
-    <div class="progress-track">
-      <div id="progressFill" class="progress-fill"></div>
-    </div>
+<section id="startScreen" class="screen active">
+  <h2>Ready to test your knowledge?</h2>
 
-    <div id="questionNumber" class="question-number">QUESTION 01</div>
-    <h2 id="questionText" class="question"></h2>
-    <div id="answerList" class="answers"></div>
-    <div id="feedback" class="feedback"></div>
+  <p class="subtitle">
+    Answer all 5 questions and see how well you really know me.
+    Your choices will be shuffled every time you start.
+  </p>
 
-    <div class="quiz-controls">
-      <button id="nextButton" class="primary-btn" onclick="nextQuestion()" disabled>
-        Next Question →
-      </button>
-    </div>
-  </section>
+  <button class="primary-btn full" onclick="startQuiz()">
+    Start Quiz →
+  </button>
+</section>
 
-  <section id="resultScreen" class="screen">
-    <div class="question-number">QUIZ COMPLETED</div>
-    <h2>Your Result</h2>
-    <div id="finalScore" class="result-score">0/5</div>
-    <p id="resultMessage" class="result-message"></p>
+<section id="quizScreen" class="screen">
+  <div class="progress-area">
+    <span id="questionCounter">Question 1 of 5</span>
+    <span id="scoreCounter">Score: 0</span>
+  </div>
 
-    <div id="reviewList" class="review-list"></div>
+  <div class="progress-track">
+    <div id="progressFill" class="progress-fill"></div>
+  </div>
 
-    <button class="primary-btn full" onclick="copyResult()">Copy My Result</button>
-    <button class="secondary-btn full" style="margin-top:10px" onclick="startQuiz()">
-      Play Again ↻
+  <div id="questionNumber" class="question-number">
+    QUESTION 01
+  </div>
+
+  <h2 id="questionText" class="question"></h2>
+
+  <div id="answerList" class="answers"></div>
+  <div id="feedback" class="feedback"></div>
+
+  <div class="quiz-controls">
+    <button
+      id="nextButton"
+      class="primary-btn"
+      onclick="nextQuestion()"
+      disabled
+    >
+      Next Question →
     </button>
-  </section>
+  </div>
+</section>
 
-  <details class="editor">
-    <summary>⚙ Customize Quiz Questions</summary>
-    <div class="editor-content">
-      <p class="editor-note">
-        You can edit the questions and answers below. The first answer is always
-        treated as the correct answer. Changes apply to your next quiz.
-      </p>
-      <div id="editorFields"></div>
-      <button class="secondary-btn full" onclick="resetQuestions()" style="margin-top:15px">
-        Reset Default Questions
-      </button>
-    </div>
-  </details>
+<section id="resultScreen" class="screen">
+  <div class="question-number">QUIZ COMPLETED</div>
+  <h2>Your Result</h2>
+
+  <div id="finalScore" class="result-score">0/5</div>
+  <p id="resultMessage" class="result-message"></p>
+
+  <div id="reviewList" class="review-list"></div>
+
+  <button class="primary-btn full" onclick="copyResult()">
+    Copy My Result
+  </button>
+
+  <button
+    class="secondary-btn full"
+    style="margin-top:10px"
+    onclick="startQuiz()"
+  >
+    Play Again ↻
+  </button>
+</section>
+
+<details class="editor">
+  <summary>⚙ Customize Quiz Questions</summary>
+
+  <div class="editor-content">
+    <p class="editor-note">
+      Edit the questions and answers below. The first answer is always
+      treated as the correct answer. Changes apply to your next quiz.
+    </p>
+
+    <div id="editorFields"></div>
+
+    <button
+      class="secondary-btn full"
+      onclick="resetQuestions()"
+      style="margin-top:15px"
+    >
+      Reset Default Questions
+    </button>
+  </div>
+</details>
 
 </main>
 
+<!-- UPDATED WATERMARK -->
 <div class="watermark">
-  <span>Web built by John V Daligdig</span>
+  Website built by
+  <span class="author">John V Daligdig</span>
 </div>
 
 <script>
 const defaultQuestions = [
   {
     question: "What are my favorite colors?",
-    answers: ["Blue, Yellow, and Purple", "Red, Black, and White", "Green, Orange, and Pink", "Black, Gray, and Blue"],
+    answers: [
+      "Blue, Yellow, and Purple",
+      "Red, Black, and White",
+      "Green, Orange, and Pink",
+      "Black, Gray, and Blue"
+    ],
     correct: 0
   },
   {
@@ -446,7 +611,12 @@ const defaultQuestions = [
   },
   {
     question: "What is my zodiac sign?",
-    answers: ["Scorpio ♏", "Leo ♌", "Gemini ♊", "Aquarius ♒"],
+    answers: [
+      "Scorpio ♏",
+      "Leo ♌",
+      "Gemini ♊",
+      "Aquarius ♒"
+    ],
     correct: 0
   }
 ];
@@ -459,16 +629,21 @@ let shuffledQuestions = [];
 let answered = false;
 
 function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+
   document.getElementById(id).classList.add("active");
 }
 
 function shuffle(array) {
   const result = [...array];
+
   for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
+
   return result;
 }
 
@@ -478,16 +653,15 @@ function startQuiz() {
   selectedAnswers = [];
   answered = false;
 
-  shuffledQuestions = questions.map(q => {
-    const options = q.answers.map((answer, index) => ({
-      text: answer,
-      correct: index === q.correct
-    }));
-    return {
-      question: q.question,
-      options: shuffle(options)
-    };
-  });
+  shuffledQuestions = questions.map(q => ({
+    question: q.question,
+    options: shuffle(
+      q.answers.map((answer, index) => ({
+        text: answer,
+        correct: index === q.correct
+      }))
+    )
+  }));
 
   showScreen("quizScreen");
   renderQuestion();
@@ -495,53 +669,73 @@ function startQuiz() {
 
 function renderQuestion() {
   answered = false;
+
   const q = shuffledQuestions[currentQuestion];
 
   document.getElementById("questionCounter").textContent =
     `Question ${currentQuestion + 1} of ${shuffledQuestions.length}`;
 
-  document.getElementById("scoreCounter").textContent = `Score: ${score}`;
+  document.getElementById("scoreCounter").textContent =
+    `Score: ${score}`;
+
   document.getElementById("questionNumber").textContent =
     `QUESTION ${String(currentQuestion + 1).padStart(2, "0")}`;
 
   document.getElementById("questionText").textContent = q.question;
+
   document.getElementById("progressFill").style.width =
     `${(currentQuestion / shuffledQuestions.length) * 100}%`;
 
-  document.getElementById("feedback").className = "feedback";
-  document.getElementById("feedback").textContent = "";
+  const feedback = document.getElementById("feedback");
+  feedback.className = "feedback";
+  feedback.textContent = "";
 
   const list = document.getElementById("answerList");
   list.innerHTML = "";
 
   q.options.forEach((option, index) => {
     const button = document.createElement("button");
+
     button.className = "answer";
-    button.textContent = `${String.fromCharCode(65 + index)}. ${option.text}`;
+    button.textContent =
+      `${String.fromCharCode(65 + index)}. ${option.text}`;
+
     button.onclick = () => selectAnswer(index);
     list.appendChild(button);
   });
 
   const next = document.getElementById("nextButton");
+
   next.disabled = true;
+
   next.textContent =
-    currentQuestion === shuffledQuestions.length - 1 ? "See Results →" : "Next Question →";
+    currentQuestion === shuffledQuestions.length - 1
+      ? "See Results →"
+      : "Next Question →";
 }
 
 function selectAnswer(index) {
   if (answered) return;
+
   answered = true;
 
   const q = shuffledQuestions[currentQuestion];
   const chosen = q.options[index];
+
   const buttons = document.querySelectorAll(".answer");
 
   selectedAnswers[currentQuestion] = chosen;
 
   buttons.forEach((button, i) => {
     button.disabled = true;
-    if (q.options[i].correct) button.classList.add("correct");
-    if (i === index && !chosen.correct) button.classList.add("wrong");
+
+    if (q.options[i].correct) {
+      button.classList.add("correct");
+    }
+
+    if (i === index && !chosen.correct) {
+      button.classList.add("wrong");
+    }
   });
 
   const feedback = document.getElementById("feedback");
@@ -551,13 +745,19 @@ function selectAnswer(index) {
     feedback.textContent = "✓ Correct! You know me well!";
     feedback.style.color = "#55e2ad";
   } else {
-    const correct = q.options.find(o => o.correct);
-    feedback.textContent = `✕ Not quite! The correct answer is: ${correct.text}`;
+    const correct = q.options.find(option => option.correct);
+
+    feedback.textContent =
+      `✕ Not quite! The correct answer is: ${correct.text}`;
+
     feedback.style.color = "#ff8795";
   }
 
   feedback.classList.add("show");
-  document.getElementById("scoreCounter").textContent = `Score: ${score}`;
+
+  document.getElementById("scoreCounter").textContent =
+    `Score: ${score}`;
+
   document.getElementById("nextButton").disabled = false;
 }
 
@@ -576,18 +776,23 @@ function nextQuestion() {
 function showResults() {
   showScreen("resultScreen");
 
-  document.getElementById("progressFill").style.width = "100%";
   document.getElementById("finalScore").textContent =
     `${score}/${shuffledQuestions.length}`;
 
   const percentage = score / shuffledQuestions.length;
+  let message;
 
-  let message = "";
-  if (percentage === 1) message = "Perfect score! You know me incredibly well! 🏆";
-  else if (percentage >= .8) message = "Amazing! You know almost everything about me! 🌟";
-  else if (percentage >= .6) message = "Great job! You know me pretty well! 😎";
-  else if (percentage >= .4) message = "Not bad! But there's still more to learn about me! 🙂";
-  else message = "Looks like you need to get to know me better! 😅";
+  if (percentage === 1) {
+    message = "Perfect score! You know me incredibly well! 🏆";
+  } else if (percentage >= .8) {
+    message = "Amazing! You know almost everything about me! 🌟";
+  } else if (percentage >= .6) {
+    message = "Great job! You know me pretty well! 😎";
+  } else if (percentage >= .4) {
+    message = "Not bad! There's still more to learn about me! 🙂";
+  } else {
+    message = "Looks like you need to get to know me better! 😅";
+  }
 
   document.getElementById("resultMessage").textContent = message;
 
@@ -595,7 +800,7 @@ function showResults() {
   review.innerHTML = "";
 
   shuffledQuestions.forEach((q, i) => {
-    const correct = q.options.find(o => o.correct);
+    const correct = q.options.find(option => option.correct);
     const chosen = selectedAnswers[i];
 
     const item = document.createElement("div");
@@ -609,10 +814,13 @@ function showResults() {
     answer.className = "review-correct";
 
     const result = document.createElement("div");
+
     result.textContent = chosen && chosen.correct
       ? "Your answer: Correct"
       : `Your answer: ${chosen ? chosen.text : "Not answered"}`;
-    result.className = chosen && chosen.correct ? "review-correct" : "review-wrong";
+
+    result.className =
+      chosen && chosen.correct ? "review-correct" : "review-wrong";
 
     item.append(title, answer, result);
     review.appendChild(item);
@@ -620,8 +828,15 @@ function showResults() {
 }
 
 function copyResult() {
-  const percentage = Math.round(score / shuffledQuestions.length * 100);
-  const text = `How Well Do You Know Me?\nMy score: ${score}/${shuffledQuestions.length} (${percentage}%)\n${document.getElementById("resultMessage").textContent}\n\nWeb built by John V Daligdig`;
+  const percentage = Math.round(
+    score / shuffledQuestions.length * 100
+  );
+
+  const text =
+    `How Well Do You Know Me?\n` +
+    `My score: ${score}/${shuffledQuestions.length} (${percentage}%)\n` +
+    `${document.getElementById("resultMessage").textContent}\n\n` +
+    `Website built by John V Daligdig`;
 
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text)
@@ -634,11 +849,14 @@ function copyResult() {
 
 function fallbackCopy(text) {
   const area = document.createElement("textarea");
+
   area.value = text;
   document.body.appendChild(area);
   area.select();
+
   document.execCommand("copy");
   area.remove();
+
   alert("Result copied!");
 }
 
@@ -652,8 +870,10 @@ function buildEditor() {
 
     const questionLabel = document.createElement("label");
     questionLabel.textContent = `Question ${i + 1}`;
+
     const questionInput = document.createElement("input");
     questionInput.value = q.question;
+
     questionInput.onchange = () => {
       questions[i].question = questionInput.value;
     };
@@ -662,11 +882,14 @@ function buildEditor() {
 
     q.answers.forEach((answer, j) => {
       const label = document.createElement("label");
-      label.textContent = `Answer ${j + 1}${j === q.correct ? " (Correct)" : ""}`;
+
+      label.textContent =
+        `Answer ${j + 1}${j === q.correct ? " (Correct)" : ""}`;
 
       const input = document.createElement("input");
       input.value = answer;
       input.style.marginBottom = "10px";
+
       input.onchange = () => {
         questions[i].answers[j] = input.value;
       };
@@ -686,5 +909,6 @@ function resetQuestions() {
 
 buildEditor();
 </script>
+
 </body>
 </html>
